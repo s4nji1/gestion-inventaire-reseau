@@ -97,7 +97,7 @@
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                     <p class="mt-1 text-sm text-gray-500">Leave empty for initial equipment entry.</p>
-                </div>
+                </div><br>
                 
                 <!-- To Status -->
                 <div>
@@ -154,24 +154,28 @@
                     </svg>
                     <span><strong>Entry:</strong> Use for new equipment being added to inventory or returning from elsewhere.</span>
                 </li>
+                <br>
                 <li class="flex items-start">
                     <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span><strong>Exit:</strong> Use when equipment leaves inventory or is assigned elsewhere.</span>
                 </li>
+                <br>
                 <li class="flex items-start">
                     <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span><strong>Maintenance:</strong> Use when equipment is sent for repair or maintenance.</span>
                 </li>
+                <br>
                 <li class="flex items-start">
                     <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span><strong>From Status:</strong> The current status of the equipment before this movement. Leave empty only for brand new equipment being entered into the system for the first time.</span>
                 </li>
+                <br>
                 <li class="flex items-start">
                     <svg class="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
