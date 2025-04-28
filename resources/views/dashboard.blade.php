@@ -17,6 +17,7 @@
                 <div class="flex-shrink-0 rounded-full bg-blue-100 p-3 mr-4">
                     <i class="fas fa-desktop text-xl text-blue-600"></i>
                 </div>
+                &nbsp &nbsp &nbsp &nbsp
                 <div>
                     <div class="text-xs font-bold text-blue-600 uppercase mb-1">Total Equipment</div>
                     <div class="text-2xl font-bold text-gray-800">{{ $equipmentCount ?? 0 }}</div>
@@ -28,6 +29,7 @@
                 <div class="flex-shrink-0 rounded-full bg-yellow-100 p-3 mr-4">
                     <i class="fas fa-tools text-xl text-yellow-600"></i>
                 </div>
+                &nbsp &nbsp &nbsp &nbsp
                 <div>
                     <div class="text-xs font-bold text-yellow-600 uppercase mb-1">In Maintenance</div>
                     <div class="text-2xl font-bold text-gray-800">{{ $maintenanceCount ?? 0 }}</div>
@@ -39,6 +41,7 @@
                 <div class="flex-shrink-0 rounded-full bg-green-100 p-3 mr-4">
                     <i class="fas fa-tags text-xl text-green-600"></i>
                 </div>
+                &nbsp &nbsp &nbsp &nbsp
                 <div>
                     <div class="text-xs font-bold text-green-600 uppercase mb-1">Categories</div>
                     <div class="text-2xl font-bold text-gray-800">{{ $categoryCount ?? 0 }}</div>
@@ -50,6 +53,7 @@
                 <div class="flex-shrink-0 rounded-full bg-cyan-100 p-3 mr-4">
                     <i class="fas fa-exchange-alt text-xl text-cyan-600"></i>
                 </div>
+                &nbsp &nbsp &nbsp &nbsp
                 <div>
                     <div class="text-xs font-bold text-cyan-600 uppercase mb-1">Recent Movements</div>
                     <div class="text-2xl font-bold text-gray-800">{{ $recentMovementsCount ?? 0 }}</div>
@@ -83,8 +87,8 @@
             <div class="px-4 py-3 border-b border-gray-200 flex items-center justify-between">
                 <h6 class="font-bold text-blue-600">Equipment by Category</h6>
                 <div class="flex space-x-2">
-                    <button id="categoryChartTypePie" class="px-2 py-1 bg-blue-100 text-blue-600 rounded text-xs font-medium hover:bg-blue-200">Pie</button>
                     <button id="categoryChartTypeBar" class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs font-medium hover:bg-blue-100">Bar</button>
+                    <button id="categoryChartTypePie" class="px-2 py-1 bg-blue-100 text-blue-600 rounded text-xs font-medium hover:bg-blue-200">Pie</button>
                 </div>
             </div>
             <div class="p-4">
