@@ -3,7 +3,7 @@
         <!-- Éléments graphiques technologiques en arrière-plan -->
         <div class="absolute right-4 top-4 w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full filter blur-xl opacity-40"></div>
         <div class="absolute -left-10 bottom-20 w-28 h-28 bg-gradient-to-tr from-blue-400 to-cyan-500 rounded-full filter blur-xl opacity-30"></div>
-        
+
         <!-- Formulaire de connexion -->
         <form method="POST" action="{{ route('login') }}" class="relative z-10">
             @csrf
@@ -11,19 +11,6 @@
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
                 {{ __('Connexion') }}
             </h2>
-
-            <!-- Circuit design element -->
-            <div class="absolute right-0 top-0 h-16 w-20 opacity-20">
-                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" class="text-gray-500">
-                    <circle cx="50" cy="50" r="3" fill="currentColor"/>
-                    <circle cx="70" cy="30" r="3" fill="currentColor"/>
-                    <circle cx="30" cy="70" r="3" fill="currentColor"/>
-                    <path d="M50 50 L70 30" stroke="currentColor" stroke-width="1"/>
-                    <path d="M50 50 L30 70" stroke="currentColor" stroke-width="1"/>
-                    <path d="M50 50 L70 70" stroke="currentColor" stroke-width="1"/>
-                    <circle cx="70" cy="70" r="3" fill="currentColor"/>
-                </svg>
-            </div>
 
             <!-- Email Address -->
             <div>
