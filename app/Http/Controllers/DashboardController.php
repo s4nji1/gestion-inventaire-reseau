@@ -23,6 +23,10 @@ class DashboardController extends Controller
         // Equipment counts
         $equipmentCount = Equipment::count();
         $categoryCount = Category::count();
+        $categoryEquipmentCounts = Category::withCount('equipment')
+        ->orderBy('name')
+        ->get();
+
         
         // Equipment in maintenance
         $maintenanceCount = Equipment::whereHas('movements', function($query) {
@@ -111,7 +115,8 @@ class DashboardController extends Controller
             'entryTrendData',
             'exitTrendData',
             'maintenanceTrendData',
-            'maintenanceStatusData'
+            'maintenanceStatusData',
+            'categoryEquipmentCounts' 
         ));
     }
     
