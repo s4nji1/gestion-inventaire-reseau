@@ -21,7 +21,7 @@ class CategoryController extends Controller
         $categories = Category::withCount('equipment')
             ->orderBy('name')
             ->paginate(15);
-            
+
         return view('category.index', compact('categories'));
     }
 
@@ -47,12 +47,12 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255|unique:categories',
             'description' => 'nullable|string',
         ]);
-        
+
         // Generate slug from the name
         $validated['slug'] = Str::slug($validated['name']);
-        
+
         Category::create($validated);
-        
+
         return redirect()->route('category.index')
             ->with('success', 'Category created successfully.');
     }
@@ -69,7 +69,7 @@ class CategoryController extends Controller
             ->with('status')
             ->orderBy('name')
             ->paginate(15);
-            
+
         return view('category.show', compact('category', 'equipment'));
     }
 
@@ -102,14 +102,14 @@ class CategoryController extends Controller
             ],
             'description' => 'nullable|string',
         ]);
-        
+
         // Generate slug from the name if the name has changed
         if ($category->name !== $validated['name']) {
             $validated['slug'] = Str::slug($validated['name']);
         }
-        
+
         $category->update($validated);
-        
+
         return redirect()->route('category.index')
             ->with('success', 'Category updated successfully.');
     }
@@ -124,12 +124,12 @@ class CategoryController extends Controller
     {
         // Check if category has equipment
         $equipmentCount = $category->equipment()->count();
-        
+
         if ($equipmentCount > 0) {
             return redirect()->route('category.index')
                 ->with('error', "Cannot delete category. It has {$equipmentCount} equipment items associated with it.");
         }
-        
+
         try {
             $category->delete();
             return redirect()->route('category.index')
@@ -149,14 +149,58 @@ class CategoryController extends Controller
     public function search(Request $request): View
     {
         $query = $request->input('query');
-        
+
         $categories = Category::withCount('equipment')
             ->where('name', 'like', "%{$query}%")
             ->orWhere('description', 'like', "%{$query}%")
             ->orderBy('name')
             ->paginate(15)
             ->appends(['query' => $query]);
-            
+
         return view('category.index', compact('categories', 'query'));
     }
+
+    // In CategoryController
+    public function exportCSV()
+    {
+        $categories = Category::withCount('equipment')->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="categories_' . date('Y-m-d') . '.csv"',
+        ];
+
+        $callback = function () use ($categories) {
+            $file = fopen('php://output', 'w');
+
+            // Write headers
+            fputcsv($file, [
+                'ID',
+                'Name',
+                'Slug',
+                'Description',
+                'Equipment Count',
+                'Created At',
+                'Updated At'
+            ]);
+
+            // Write data
+            foreach ($categories as $category) {
+                fputcsv($file, [
+                    $category->id,
+                    $category->name,
+                    $category->slug,
+                    $category->description ?? '',
+                    $category->equipment_count,
+                    $category->created_at->format('Y-m-d H:i:s'),
+                    $category->updated_at->format('Y-m-d H:i:s')
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
 }

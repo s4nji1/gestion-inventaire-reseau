@@ -27,7 +27,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Equipment
     Route::get('/equipment', [EquipmentController::class, 'index'])->name('equipment.index');
     Route::get('/equipment/create', [EquipmentController::class, 'create'])->name('equipment.create');
@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/equipment/export/csv', [EquipmentController::class, 'exportCSV'])->name('equipment.export.csv');
     Route::get('/equipment/export/filtered-csv', [EquipmentController::class, 'exportFilteredCSV'])->name('equipment.export.filtered-csv');
     Route::get('/equipment/export/dynamic-csv', [EquipmentController::class, 'dynamicCSVExport'])->name('equipment.export.dynamic-csv');
-    
+
     // Category
     Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('category.create');
@@ -51,7 +51,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('category.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
     Route::get('/category-search', [CategoryController::class, 'search'])->name('category.search');
-    
+    Route::get('/categories/export/csv', [CategoryController::class, 'exportCSV'])->name('category.export.csv');
+
     // Status
     Route::get('/statuses', [StatusController::class, 'index'])->name('status.index');
     Route::get('/statuses/create', [StatusController::class, 'create'])->name('status.create');
@@ -61,7 +62,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/statuses/{status}', [StatusController::class, 'update'])->name('status.update');
     Route::delete('/statuses/{status}', [StatusController::class, 'destroy'])->name('status.destroy');
     Route::get('/status-search', [StatusController::class, 'search'])->name('status.search');
-    
+    Route::get('/statuses/export/csv', [StatusController::class, 'exportCSV'])->name('status.export.csv');
+
     // Movement
     Route::get('/movements', [MovementController::class, 'index'])->name('movement.index');
     Route::get('/movements/create', [MovementController::class, 'create'])->name('movement.create');
@@ -73,7 +75,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/movement-search', [MovementController::class, 'search'])->name('movement.search');
     Route::get('/movement-filter', [MovementController::class, 'filter'])->name('movement.filter');
     Route::get('/equipment/{equipment}/history', [MovementController::class, 'history'])->name('movement.history');
-    
+    Route::get('/movements/export/csv', [MovementController::class, 'exportCSV'])->name('movement.export.csv');
+
     // Maintenance
     Route::get('/maintenance', [MaintenanceRecordsController::class, 'index'])->name('maintenance.index');
     Route::get('/maintenance/create', [MaintenanceRecordsController::class, 'create'])->name('maintenance.create');
@@ -84,11 +87,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/maintenance/{maintenanceRecord}', [MaintenanceRecordsController::class, 'destroy'])->name('maintenance.destroy');
     Route::get('/maintenance-search', [MaintenanceRecordsController::class, 'search'])->name('maintenance.search');
     Route::get('/maintenance-filter', [MaintenanceRecordsController::class, 'filter'])->name('maintenance.filter');
-    
+    Route::get('/maintenance/export/csv', [MaintenanceRecordsController::class, 'exportCSV'])->name('maintenance.export.csv');
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

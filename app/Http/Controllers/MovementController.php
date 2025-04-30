@@ -22,7 +22,7 @@ class MovementController extends Controller
         $movements = Movement::with(['equipment', 'fromStatus', 'toStatus'])
             ->orderBy('created_at', 'desc')
             ->paginate(15);
-            
+
         return view('movement.index', compact('movements'));
     }
 
@@ -35,7 +35,7 @@ class MovementController extends Controller
     {
         $equipment = Equipment::with('status')->orderBy('name')->get();
         $statuses = Status::orderBy('name')->get();
-        
+
         return view('movement.create', compact('equipment', 'statuses'));
     }
 
@@ -53,20 +53,20 @@ class MovementController extends Controller
             'to_status_id' => 'required|exists:statuses,id',
             'notes' => 'nullable|string',
         ]);
-        
+
         // Get the current status of the equipment
         $equipment = Equipment::findOrFail($validated['equipment_id']);
         $validated['from_status_id'] = $equipment->status_id;
-        
+
         DB::beginTransaction();
         try {
             // Create the movement record
             $movement = Movement::create($validated);
-            
+
             // Update the equipment status
             $equipment->status_id = $validated['to_status_id'];
             $equipment->save();
-            
+
             DB::commit();
             return redirect()->route('movement.index')
                 ->with('success', 'Movement record created successfully.');
@@ -85,7 +85,7 @@ class MovementController extends Controller
     public function show(Movement $movement): View
     {
         $movement->load(['equipment.category', 'fromStatus', 'toStatus']);
-        
+
         return view('movement.show', compact('movement'));
     }
 
@@ -99,7 +99,7 @@ class MovementController extends Controller
     {
         $equipment = Equipment::orderBy('name')->get();
         $statuses = Status::orderBy('name')->get();
-        
+
         return view('movement.edit', compact('movement', 'equipment', 'statuses'));
     }
 
@@ -116,12 +116,12 @@ class MovementController extends Controller
             'type' => 'required|in:entry,exit,maintenance',
             'notes' => 'nullable|string',
         ]);
-        
+
         // Only allow updating type and notes, not the equipment or statuses
         // This prevents inconsistencies in the movement history
-        
+
         $movement->update($validated);
-        
+
         return redirect()->route('movement.show', $movement)
             ->with('success', 'Movement record updated successfully.');
     }
@@ -138,12 +138,12 @@ class MovementController extends Controller
         $latestMovement = Movement::where('equipment_id', $movement->equipment_id)
             ->orderBy('created_at', 'desc')
             ->first();
-            
+
         if ($latestMovement->id == $movement->id) {
             return redirect()->route('movement.index')
                 ->with('error', 'Cannot delete the latest movement record for an equipment. This would create inconsistency in status history.');
         }
-        
+
         try {
             $movement->delete();
             return redirect()->route('movement.index')
@@ -153,7 +153,7 @@ class MovementController extends Controller
                 ->with('error', 'Failed to delete movement record: ' . $e->getMessage());
         }
     }
-    
+
     /**
      * Search for movements.
      *
@@ -163,20 +163,20 @@ class MovementController extends Controller
     public function search(Request $request): View
     {
         $query = $request->input('query');
-        
+
         $movements = Movement::with(['equipment', 'fromStatus', 'toStatus'])
-            ->whereHas('equipment', function($q) use ($query) {
+            ->whereHas('equipment', function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('serial_number', 'like', "%{$query}%");
+                    ->orWhere('serial_number', 'like', "%{$query}%");
             })
             ->orWhere('notes', 'like', "%{$query}%")
             ->orderBy('created_at', 'desc')
             ->paginate(15)
             ->appends(['query' => $query]);
-            
+
         return view('movement.index', compact('movements', 'query'));
     }
-    
+
     /**
      * Filter movements by type or status.
      *
@@ -187,32 +187,32 @@ class MovementController extends Controller
     {
         $type = $request->input('type');
         $statusId = $request->input('status_id');
-        
+
         $query = Movement::with(['equipment', 'fromStatus', 'toStatus']);
-        
+
         if ($type) {
             $query->where('type', $type);
         }
-        
+
         if ($statusId) {
-            $query->where(function($q) use ($statusId) {
+            $query->where(function ($q) use ($statusId) {
                 $q->where('from_status_id', $statusId)
-                  ->orWhere('to_status_id', $statusId);
+                    ->orWhere('to_status_id', $statusId);
             });
         }
-        
+
         $movements = $query->orderBy('created_at', 'desc')
             ->paginate(15)
             ->appends([
                 'type' => $type,
                 'status_id' => $statusId
             ]);
-            
+
         $statuses = Status::orderBy('name')->get();
-            
+
         return view('movement.index', compact('movements', 'type', 'statusId', 'statuses'));
     }
-    
+
     /**
      * Get equipment history (all movements for a specific equipment).
      *
@@ -225,7 +225,52 @@ class MovementController extends Controller
             ->where('equipment_id', $equipment->id)
             ->orderBy('created_at', 'desc')
             ->paginate(15);
-            
+
         return view('movement.history', compact('equipment', 'movements'));
+    }
+
+    // In MovementController
+    public function exportCSV()
+    {
+        $movements = Movement::with(['equipment', 'fromStatus', 'toStatus'])->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="movements_' . date('Y-m-d') . '.csv"',
+        ];
+
+        $callback = function () use ($movements) {
+            $file = fopen('php://output', 'w');
+
+            // Write headers
+            fputcsv($file, [
+                'ID',
+                'Equipment Name',
+                'Equipment Serial Number',
+                'Movement Type',
+                'From Status',
+                'To Status',
+                'Notes',
+                'Date'
+            ]);
+
+            // Write data
+            foreach ($movements as $movement) {
+                fputcsv($file, [
+                    $movement->id,
+                    $movement->equipment->name,
+                    $movement->equipment->serial_number,
+                    $movement->type,
+                    $movement->fromStatus ? $movement->fromStatus->name : 'Initial Entry',
+                    $movement->toStatus->name,
+                    $movement->notes ?? '',
+                    $movement->created_at->format('Y-m-d H:i:s')
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
