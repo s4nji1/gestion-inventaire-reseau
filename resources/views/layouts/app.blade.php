@@ -5,7 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'UM6P Network Inventory') }}</title>
+        {{-- <title>{{ config('app.name', 'UM6P Network Inventory') }}</title> --}}
+        <title> @yield('title') | UM6P Network </title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -101,7 +102,7 @@
                             <span class="text-gray-500 font-medium">UM6P Network Inventory</span>
                         </div>
                         <p class="text-sm text-gray-500">
-                            &copy; {{ date('Y') }} Tous droits réservés. Stage EST Essaouira
+                            &copy; {{ date('Y') }} All rights preserved. Stage EST Essaouira
                         </p>
                     </div>
                 </div>

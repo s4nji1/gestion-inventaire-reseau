@@ -29,9 +29,7 @@ class DashboardController extends Controller
 
         
         // Equipment in maintenance
-        $maintenanceCount = Equipment::whereHas('movements', function($query) {
-            $query->where('to_status_id', '3');
-        })->count();
+        $maintenanceCount = Equipment::where('status_id', 3)->count();
         
         // Recent movements in the last 7 days
         $recentMovementsCount = Movement::where('created_at', '>=', now()->subDays(7))->count();

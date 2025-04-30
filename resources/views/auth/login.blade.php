@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @section('title', 'Login')
     <div class="relative">
         <!-- Éléments graphiques technologiques en arrière-plan -->
         <div class="absolute right-4 top-4 w-20 h-20 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full filter blur-xl opacity-40"></div>
@@ -9,7 +10,7 @@
             @csrf
 
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-                {{ __('Connexion') }}
+                {{ __('Login') }}
             </h2>
 
             <!-- Email Address -->
@@ -21,7 +22,7 @@
 
             <!-- Password -->
             <div class="mt-4">
-                <x-input-label for="password" :value="__('Mot de passe')" />
+                <x-input-label for="password" :value="__('Password')" />
 
                 <x-text-input id="password" class="block mt-1 w-full"
                                 type="password"
@@ -35,27 +36,27 @@
             <div class="block mt-4">
                 <label for="remember_me" class="inline-flex items-center">
                     <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500" name="remember">
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Se souvenir de moi') }}</span>
+                    <span class="ml-2 text-sm text-gray-600">&nbsp;{{ __('Remember me') }}</span>
                 </label>
             </div>
 
             <div class="flex items-center justify-end mt-4">
                 @if (Route::has('password.request'))
                     <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" href="{{ route('password.request') }}">
-                        {{ __('Mot de passe oublié?') }}
+                        {{ __('Forgot password ?') }}
                     </a>
                 @endif
 
                 <x-primary-button class="ml-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700">
-                    {{ __('Connexion') }}
+                    {{ __('Login') }}
                 </x-primary-button>
             </div>
             
             <!-- Lien d'inscription -->
             <div class="text-center mt-6">
-                <span class="text-sm text-gray-600">{{ __('Vous n\'avez pas de compte?') }}</span>
+                <span class="text-sm text-gray-600">{{ __('Not registered yet ?') }}</span>
                 <a href="{{ route('register') }}" class="text-sm text-blue-600 hover:text-blue-800 ml-1 font-semibold">
-                    {{ __('Créer un compte') }}
+                    {{ __('Create an account') }}
                 </a>
             </div>
         </form>

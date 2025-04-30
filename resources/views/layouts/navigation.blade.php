@@ -18,28 +18,28 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
-                        <span>{{ __('Tableau de bord') }}</span>
+                        <span>{{ __('Dashboard') }}</span>
                     </x-nav-link>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <x-nav-link :href="route('equipment.index')" :active="request()->routeIs('equipment.*')" class="text-gray-300 hover:text-cyan-400 border-b-2 border-transparent transition-all duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                         </svg>
-                        <span>{{ __('Équipements') }}</span>
+                        <span>{{ __('Equipments') }}</span>
                     </x-nav-link>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.*')" class="text-gray-300 hover:text-cyan-400 border-b-2 border-transparent transition-all duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                         </svg>
-                        <span>{{ __('Catégories') }}</span>
+                        <span>{{ __('Categories') }}</span>
                     </x-nav-link>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <x-nav-link :href="route('movement.index')" :active="request()->routeIs('movement.*')" class="text-gray-300 hover:text-cyan-400 border-b-2 border-transparent transition-all duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
                         </svg>
-                        <span>{{ __('Mouvements') }}</span>
+                        <span>{{ __('Movements') }}</span>
                     </x-nav-link>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <x-nav-link :href="route('maintenance.index')" :active="request()->routeIs('maintenance.*')" class="text-gray-300 hover:text-cyan-400 border-b-2 border-transparent transition-all duration-300">
@@ -54,7 +54,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>{{ __('Statuts') }}</span>
+                        <span>{{ __('Statuses') }}</span>
                     </x-nav-link>
                 </div>
             </div>
@@ -77,7 +77,7 @@
 
                     <x-slot name="content">
                         <div class="px-4 py-2 text-xs text-gray-500 border-b border-gray-200">
-                            {{ __('Gérer le compte') }}
+                            {{ __('Manage Account') }}
                         </div>
                         
                         <x-dropdown-link :href="route('profile.edit')" class="hover:bg-slate-100">
@@ -85,7 +85,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                {{ __('Profil') }}
+                                {{ __('Profile') }}
                             </div>
                         </x-dropdown-link>
 

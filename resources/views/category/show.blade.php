@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Category Details')
 @section('content')
 <div class="w-full">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">

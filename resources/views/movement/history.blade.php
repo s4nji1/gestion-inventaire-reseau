@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Movement History')
 @section('content')
 <div class="w-full">
     <!-- Breadcrumbs -->

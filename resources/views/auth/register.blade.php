@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @section('title', 'Register')
     <div class="relative">
         <!-- Éléments graphiques technologiques en arrière-plan -->
         <div class="absolute -right-4 -top-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-cyan-300 rounded-full filter blur-xl opacity-50"></div>
@@ -9,12 +10,12 @@
             @csrf
 
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-                {{ __('Créer un compte') }}
+                {{ __('Create your account') }}
             </h2>
 
             <!-- Nom -->
             <div>
-                <x-input-label for="name" :value="__('Nom')" />
+                <x-input-label for="name" :value="__('Name')" />
                 <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
@@ -28,7 +29,7 @@
 
             <!-- Mot de passe -->
             <div class="mt-4">
-                <x-input-label for="password" :value="__('Mot de passe')" />
+                <x-input-label for="password" :value="__('Password')" />
 
                 <x-text-input id="password" class="block mt-1 w-full"
                                 type="password"
@@ -40,7 +41,7 @@
 
             <!-- Confirmation du mot de passe -->
             <div class="mt-4">
-                <x-input-label for="password_confirmation" :value="__('Confirmer le mot de passe')" />
+                <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
                 <x-text-input id="password_confirmation" class="block mt-1 w-full"
                                 type="password"
@@ -55,17 +56,17 @@
                     <div class="w-full border-t border-gray-200"></div>
                 </div>
                 <div class="relative flex justify-center text-sm">
-                    <span class="px-2 bg-white text-gray-500">{{ __('Sécurité') }}</span>
+                    <span class="px-2 bg-white text-gray-500">{{ __('Security') }}</span>
                 </div>
             </div>
 
             <div class="flex items-center justify-between mt-4">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Déjà inscrit?') }}
+                    {{ __('Already registered?') }}
                 </a>
             
                 <x-primary-button class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700">
-                    {{ __('S\'inscrire') }}
+                    {{ __('Register') }}
                 </x-primary-button>
             </div>
         </form>

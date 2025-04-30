@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Dashboard')
 @section('content')
     <div class="w-full px-4">
         <div class="flex flex-col mb-6">
