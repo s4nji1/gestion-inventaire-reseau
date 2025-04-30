@@ -38,6 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/equipment/{equipment}', [EquipmentController::class, 'destroy'])->name('equipment.destroy');
     Route::get('/equipment-search', [EquipmentController::class, 'search'])->name('equipment.search');
     Route::get('/equipment-filter', [EquipmentController::class, 'filter'])->name('equipment.filter');
+    Route::get('/equipment/export/csv', [EquipmentController::class, 'exportCSV'])->name('equipment.export.csv');
+    Route::get('/equipment/export/filtered-csv', [EquipmentController::class, 'exportFilteredCSV'])->name('equipment.export.filtered-csv');
+    Route::get('/equipment/export/dynamic-csv', [EquipmentController::class, 'dynamicCSVExport'])->name('equipment.export.dynamic-csv');
     
     // Category
     Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');

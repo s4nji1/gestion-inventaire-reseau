@@ -24,10 +24,10 @@ class EquipmentController extends Controller
         $equipment = Equipment::with(['category', 'status'])
             ->orderBy('name')
             ->paginate(15);
-            
+
         $categories = Category::orderBy('name')->get();
         $statuses = Status::orderBy('name')->get();
-            
+
         return view('equipment.index', compact('equipment', 'categories', 'statuses'));
     }
 
@@ -40,7 +40,7 @@ class EquipmentController extends Controller
     {
         $categories = Category::orderBy('name')->get();
         $statuses = Status::orderBy('name')->get();
-        
+
         return view('equipment.create', compact('categories', 'statuses'));
     }
 
@@ -62,11 +62,11 @@ class EquipmentController extends Controller
             'status_id' => 'required|exists:statuses,id',
             'notes' => 'nullable|string',
         ]);
-        
+
         DB::beginTransaction();
         try {
             $equipment = Equipment::create($validated);
-            
+
             // Create a movement for the new equipment
             Movement::create([
                 'equipment_id' => $equipment->id,
@@ -75,7 +75,7 @@ class EquipmentController extends Controller
                 'to_status_id' => $request->status_id,
                 'notes' => 'Initial entry of equipment',
             ]);
-            
+
             DB::commit();
             return redirect()->route('equipment.index')
                 ->with('success', 'Equipment added successfully.');
@@ -93,21 +93,29 @@ class EquipmentController extends Controller
      */
     public function show(Equipment $equipment): View
     {
-        $equipment->load(['category', 'status', 'movements' => function($query) {
-            $query->with(['fromStatus', 'toStatus'])->orderBy('created_at', 'desc');
-        }]);
-        
+        $equipment->load([
+            'category',
+            'status',
+            'movements' => function ($query) {
+                $query->with(['fromStatus', 'toStatus'])->orderBy('created_at', 'desc');
+            }
+        ]);
+
         // Check if the relationship method is MaintenanceRecords (capital) or maintenanceRecords (lowercase)
         if (method_exists($equipment, 'maintenanceRecords')) {
-            $equipment->load(['maintenanceRecords' => function($query) {
-                $query->orderBy('created_at', 'desc');
-            }]);
+            $equipment->load([
+                'maintenanceRecords' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                }
+            ]);
         } else {
-            $equipment->load(['MaintenanceRecords' => function($query) {
-                $query->orderBy('created_at', 'desc');
-            }]);
+            $equipment->load([
+                'MaintenanceRecords' => function ($query) {
+                    $query->orderBy('created_at', 'desc');
+                }
+            ]);
         }
-        
+
         return view('equipment.show', compact('equipment'));
     }
 
@@ -121,7 +129,7 @@ class EquipmentController extends Controller
     {
         $categories = Category::orderBy('name')->get();
         $statuses = Status::orderBy('name')->get();
-        
+
         return view('equipment.edit', compact('equipment', 'categories', 'statuses'));
     }
 
@@ -149,25 +157,25 @@ class EquipmentController extends Controller
             'notes' => 'nullable|string',
             'movement_notes' => 'nullable|string',
         ]);
-        
+
         DB::beginTransaction();
         try {
             // Check if status has changed
             $oldStatusId = $equipment->status_id;
             $newStatusId = $request->status_id;
-            
+
             $equipment->update($validated);
-            
+
             // Create a movement entry if status changed
             if ($oldStatusId != $newStatusId) {
                 // Get maintenance status - safely
                 $maintenanceStatus = Status::where('slug', 'maintenance')->first();
                 $movementType = 'exit'; // Default movement type
-                
+
                 if ($maintenanceStatus && $newStatusId == $maintenanceStatus->id) {
                     $movementType = 'maintenance';
                 }
-                
+
                 Movement::create([
                     'equipment_id' => $equipment->id,
                     'type' => $movementType,
@@ -176,7 +184,7 @@ class EquipmentController extends Controller
                     'notes' => $request->movement_notes ?? 'Status changed during equipment update',
                 ]);
             }
-            
+
             DB::commit();
             return redirect()->route('equipment.show', $equipment)
                 ->with('success', 'Equipment updated successfully.');
@@ -203,7 +211,7 @@ class EquipmentController extends Controller
                 ->with('error', 'Failed to delete equipment: ' . $e->getMessage());
         }
     }
-    
+
     /**
      * Search for equipment.
      *
@@ -213,24 +221,24 @@ class EquipmentController extends Controller
     public function search(Request $request): View
     {
         $query = $request->input('query');
-        
+
         $equipment = Equipment::with(['category', 'status'])
-            ->where(function($q) use ($query) {
+            ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('serial_number', 'like', "%{$query}%")
-                  ->orWhere('mac_address', 'like', "%{$query}%")
-                  ->orWhere('brand', 'like', "%{$query}%")
-                  ->orWhere('model', 'like', "%{$query}%");
+                    ->orWhere('serial_number', 'like', "%{$query}%")
+                    ->orWhere('mac_address', 'like', "%{$query}%")
+                    ->orWhere('brand', 'like', "%{$query}%")
+                    ->orWhere('model', 'like', "%{$query}%");
             })
             ->paginate(15)
             ->appends(['query' => $query]);
-            
+
         $categories = Category::orderBy('name')->get();
         $statuses = Status::orderBy('name')->get();
-            
+
         return view('equipment.index', compact('equipment', 'categories', 'statuses', 'query'));
     }
-    
+
     /**
      * Filter equipment by category and status.
      *
@@ -241,23 +249,206 @@ class EquipmentController extends Controller
     {
         $categoryId = $request->input('category_id');
         $statusId = $request->input('status_id');
-        
+
         $query = Equipment::with(['category', 'status']);
-        
+
         if ($categoryId) {
             $query->where('category_id', $categoryId);
         }
-        
+
         if ($statusId) {
             $query->where('status_id', $statusId);
         }
-        
+
         $equipment = $query->orderBy('name')->paginate(15)
             ->appends(['category_id' => $categoryId, 'status_id' => $statusId]);
-            
+
         $categories = Category::orderBy('name')->get();
         $statuses = Status::orderBy('name')->get();
-        
+
         return view('equipment.index', compact('equipment', 'categories', 'statuses', 'categoryId', 'statusId'));
     }
+
+    public function exportCSV()
+    {
+        $equipment = Equipment::with(['category', 'status'])->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="equipment_' . date('Y-m-d') . '.csv"',
+        ];
+
+        $callback = function () use ($equipment) {
+            $file = fopen('php://output', 'w');
+
+            // Write headers
+            fputcsv($file, [
+                'ID',
+                'Name',
+                'Brand',
+                'Model',
+                'Serial Number',
+                'MAC Address',
+                'Category',
+                'Status',
+                'Notes',
+                'Created At',
+                'Updated At'
+            ]);
+
+            // Write data
+            foreach ($equipment as $item) {
+                fputcsv($file, [
+                    $item->id,
+                    $item->name,
+                    $item->brand,
+                    $item->model,
+                    $item->serial_number,
+                    $item->mac_address,
+                    $item->category->name,
+                    $item->status->name,
+                    $item->notes,
+                    $item->created_at->format('Y-m-d H:i:s'),
+                    $item->updated_at->format('Y-m-d H:i:s')
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function exportFilteredCSV(Request $request)
+    {
+        $query = Equipment::query()->with(['category', 'status']);
+
+        // Apply filters if provided
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+
+        if ($request->filled('status_id')) {
+            $query->where('status_id', $request->input('status_id'));
+        }
+
+        $equipment = $query->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="equipment_filtered_' . date('Y-m-d') . '.csv"',
+        ];
+
+        $callback = function () use ($equipment) {
+            $file = fopen('php://output', 'w');
+
+            // Write headers
+            fputcsv($file, [
+                'ID',
+                'Name',
+                'Brand',
+                'Model',
+                'Serial Number',
+                'MAC Address',
+                'Category',
+                'Status',
+                'Notes',
+                'Created At',
+                'Updated At'
+            ]);
+
+            // Write data
+            foreach ($equipment as $item) {
+                fputcsv($file, [
+                    $item->id,
+                    $item->name,
+                    $item->brand,
+                    $item->model,
+                    $item->serial_number,
+                    $item->mac_address,
+                    $item->category->name,
+                    $item->status->name,
+                    $item->notes,
+                    $item->created_at->format('Y-m-d H:i:s'),
+                    $item->updated_at->format('Y-m-d H:i:s')
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    public function dynamicCSVExport(Request $request)
+    {
+        // Allow user to select columns
+        $selectedColumns = $request->input('columns', [
+            'id',
+            'name',
+            'serial_number',
+            'category',
+            'status'
+        ]);
+
+        $equipment = Equipment::with(['category', 'status'])->get();
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="equipment_custom_' . date('Y-m-d') . '.csv"',
+        ];
+
+        $callback = function () use ($equipment, $selectedColumns) {
+            $file = fopen('php://output', 'w');
+
+            // Dynamic headers based on selected columns
+            $headerRow = [];
+            $columnMapping = [
+                'id' => 'ID',
+                'name' => 'Name',
+                'brand' => 'Brand',
+                'model' => 'Model',
+                'serial_number' => 'Serial Number',
+                'mac_address' => 'MAC Address',
+                'category' => 'Category',
+                'status' => 'Status',
+                'notes' => 'Notes',
+                'created_at' => 'Created At',
+                'updated_at' => 'Updated At'
+            ];
+
+            $headerRow = array_map(function ($column) use ($columnMapping) {
+                return $columnMapping[$column] ?? $column;
+            }, $selectedColumns);
+
+            fputcsv($file, $headerRow);
+
+            // Write data
+            foreach ($equipment as $item) {
+                $row = [];
+                foreach ($selectedColumns as $column) {
+                    switch ($column) {
+                        case 'category':
+                            $row[] = $item->category->name;
+                            break;
+                        case 'status':
+                            $row[] = $item->status->name;
+                            break;
+                        case 'created_at':
+                        case 'updated_at':
+                            $row[] = $item->{$column}->format('Y-m-d H:i:s');
+                            break;
+                        default:
+                            $row[] = $item->{$column};
+                    }
+                }
+                fputcsv($file, $row);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
 }
