@@ -39,8 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/equipment-search', [EquipmentController::class, 'search'])->name('equipment.search');
     Route::get('/equipment-filter', [EquipmentController::class, 'filter'])->name('equipment.filter');
     Route::get('/equipment/export/csv', [EquipmentController::class, 'exportCSV'])->name('equipment.export.csv');
-    Route::get('/equipment/export/filtered-csv', [EquipmentController::class, 'exportFilteredCSV'])->name('equipment.export.filtered-csv');
-    Route::get('/equipment/export/dynamic-csv', [EquipmentController::class, 'dynamicCSVExport'])->name('equipment.export.dynamic-csv');
+    Route::get('/equipment/export/pdf', [EquipmentController::class, 'exportPDF'])->name('equipment.export.pdf');
 
     // Category
     Route::get('/categories', [CategoryController::class, 'index'])->name('category.index');
@@ -76,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/movement-filter', [MovementController::class, 'filter'])->name('movement.filter');
     Route::get('/equipment/{equipment}/history', [MovementController::class, 'history'])->name('movement.history');
     Route::get('/movements/export/csv', [MovementController::class, 'exportCSV'])->name('movement.export.csv');
+    Route::get('/movements/export/pdf', [MovementController::class, 'exportPDF'])->name('movement.export.pdf');
 
     // Maintenance
     Route::get('/maintenance', [MaintenanceRecordsController::class, 'index'])->name('maintenance.index');
@@ -88,6 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/maintenance-search', [MaintenanceRecordsController::class, 'search'])->name('maintenance.search');
     Route::get('/maintenance-filter', [MaintenanceRecordsController::class, 'filter'])->name('maintenance.filter');
     Route::get('/maintenance/export/csv', [MaintenanceRecordsController::class, 'exportCSV'])->name('maintenance.export.csv');
+    Route::get('/maintenance/export/pdf', [MaintenanceRecordsController::class, 'exportPDF'])->name('maintenance.export.pdf');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EquipmentController extends Controller
 {
@@ -319,136 +320,31 @@ class EquipmentController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    public function exportFilteredCSV(Request $request)
+    public function exportPDF(Request $request)
     {
-        $query = Equipment::query()->with(['category', 'status']);
+        // Apply filters similar to CSV export
+        $query = Equipment::with(['category', 'status']);
 
-        // Apply filters if provided
+        // Filter by category
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->input('category_id'));
         }
 
+        // Filter by status
         if ($request->filled('status_id')) {
             $query->where('status_id', $request->input('status_id'));
         }
 
         $equipment = $query->get();
 
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="equipment_filtered_' . date('Y-m-d') . '.csv"',
-        ];
-
-        $callback = function () use ($equipment) {
-            $file = fopen('php://output', 'w');
-
-            // Write headers
-            fputcsv($file, [
-                'ID',
-                'Name',
-                'Brand',
-                'Model',
-                'Serial Number',
-                'MAC Address',
-                'Category',
-                'Status',
-                'Notes',
-                'Created At',
-                'Updated At'
-            ]);
-
-            // Write data
-            foreach ($equipment as $item) {
-                fputcsv($file, [
-                    $item->id,
-                    $item->name,
-                    $item->brand,
-                    $item->model,
-                    $item->serial_number,
-                    $item->mac_address,
-                    $item->category->name,
-                    $item->status->name,
-                    $item->notes,
-                    $item->created_at->format('Y-m-d H:i:s'),
-                    $item->updated_at->format('Y-m-d H:i:s')
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
-    }
-
-    public function dynamicCSVExport(Request $request)
-    {
-        // Allow user to select columns
-        $selectedColumns = $request->input('columns', [
-            'id',
-            'name',
-            'serial_number',
-            'category',
-            'status'
+        // Generate PDF
+        $pdf = PDF::loadView('exports.equipment_pdf', [
+            'equipment' => $equipment,
+            'title' => 'Equipment Report',
+            'subtitle' => 'Generated on ' . now()->format('Y-m-d H:i:s')
         ]);
 
-        $equipment = Equipment::with(['category', 'status'])->get();
-
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="equipment_custom_' . date('Y-m-d') . '.csv"',
-        ];
-
-        $callback = function () use ($equipment, $selectedColumns) {
-            $file = fopen('php://output', 'w');
-
-            // Dynamic headers based on selected columns
-            $headerRow = [];
-            $columnMapping = [
-                'id' => 'ID',
-                'name' => 'Name',
-                'brand' => 'Brand',
-                'model' => 'Model',
-                'serial_number' => 'Serial Number',
-                'mac_address' => 'MAC Address',
-                'category' => 'Category',
-                'status' => 'Status',
-                'notes' => 'Notes',
-                'created_at' => 'Created At',
-                'updated_at' => 'Updated At'
-            ];
-
-            $headerRow = array_map(function ($column) use ($columnMapping) {
-                return $columnMapping[$column] ?? $column;
-            }, $selectedColumns);
-
-            fputcsv($file, $headerRow);
-
-            // Write data
-            foreach ($equipment as $item) {
-                $row = [];
-                foreach ($selectedColumns as $column) {
-                    switch ($column) {
-                        case 'category':
-                            $row[] = $item->category->name;
-                            break;
-                        case 'status':
-                            $row[] = $item->status->name;
-                            break;
-                        case 'created_at':
-                        case 'updated_at':
-                            $row[] = $item->{$column}->format('Y-m-d H:i:s');
-                            break;
-                        default:
-                            $row[] = $item->{$column};
-                    }
-                }
-                fputcsv($file, $row);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return $pdf->download('equipment_report_' . date('Y-m-d') . '.pdf');
     }
 
 }

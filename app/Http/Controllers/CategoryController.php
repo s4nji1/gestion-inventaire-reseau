@@ -159,48 +159,4 @@ class CategoryController extends Controller
 
         return view('category.index', compact('categories', 'query'));
     }
-
-    // In CategoryController
-    public function exportCSV()
-    {
-        $categories = Category::withCount('equipment')->get();
-
-        $headers = [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="categories_' . date('Y-m-d') . '.csv"',
-        ];
-
-        $callback = function () use ($categories) {
-            $file = fopen('php://output', 'w');
-
-            // Write headers
-            fputcsv($file, [
-                'ID',
-                'Name',
-                'Slug',
-                'Description',
-                'Equipment Count',
-                'Created At',
-                'Updated At'
-            ]);
-
-            // Write data
-            foreach ($categories as $category) {
-                fputcsv($file, [
-                    $category->id,
-                    $category->name,
-                    $category->slug,
-                    $category->description ?? '',
-                    $category->equipment_count,
-                    $category->created_at->format('Y-m-d H:i:s'),
-                    $category->updated_at->format('Y-m-d H:i:s')
-                ]);
-            }
-
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
-    }
-
 }

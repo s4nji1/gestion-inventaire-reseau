@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MaintenanceRecordsController extends Controller
 {
@@ -291,4 +292,29 @@ class MaintenanceRecordsController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    public function exportPDF(Request $request)
+{
+    $query = MaintenanceRecords::with('equipment');
+
+    // Filters
+    if ($request->filled('status')) {
+        $query->where('status', $request->input('status'));
+    }
+
+    if ($request->filled('equipment_id')) {
+        $query->where('equipment_id', $request->input('equipment_id'));
+    }
+
+    $maintenanceRecords = $query->get();
+
+    $pdf = PDF::loadView('exports.maintenance_pdf', [
+        'records' => $maintenanceRecords,
+        'title' => 'Maintenance Records Report',
+        'subtitle' => 'Generated on ' . now()->format('Y-m-d H:i:s')
+    ]);
+
+    return $pdf->download('maintenance_records_report_' . date('Y-m-d') . '.pdf');
+}
+
 }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MovementController extends Controller
 {
@@ -273,4 +274,29 @@ class MovementController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    public function exportPDF(Request $request)
+    {
+        $query = Movement::with(['equipment', 'fromStatus', 'toStatus']);
+
+        // Filters
+        if ($request->filled('type')) {
+            $query->where('type', $request->input('type'));
+        }
+
+        if ($request->filled('equipment_id')) {
+            $query->where('equipment_id', $request->input('equipment_id'));
+        }
+
+        $movements = $query->get();
+
+        $pdf = PDF::loadView('exports.movements_pdf', [
+            'movements' => $movements,
+            'title' => 'Equipment Movements Report',
+            'subtitle' => 'Generated on ' . now()->format('Y-m-d H:i:s')
+        ]);
+
+        return $pdf->download('movements_report_' . date('Y-m-d') . '.pdf');
+    }
+
 }
