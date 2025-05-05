@@ -62,7 +62,7 @@
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="w-6 h-6 rounded-full mr-2" style="background-color: {{ $status->color }}"></div>
+                                    <div class="w-6 h-6 rounded-full mr-2" style="background-color: {{ $status->color }}"></div>&nbsp;
                                     <span class="text-xs text-gray-500">{{ $status->color }}</span>
                                 </div>
                             </td>
