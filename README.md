@@ -69,12 +69,12 @@ The Equipment Inventory Management System is designed to help UM6P's IT Departme
 
 7. Configure your database in the .env file:
    ```
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=equipment_inventory
-   DB_USERNAME=root
-   DB_PASSWORD=
+    DB_CONNECTION=pgsql
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_DATABASE=inventaire_reseau
+    DB_USERNAME=postgres
+    DB_PASSWORD=123
    ```
 
 8. Run database migrations and seeders:
