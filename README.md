@@ -2,7 +2,7 @@
 
 A comprehensive web-based system for tracking IT equipment, movements, maintenance records, and status changes at Université Mohammed VI Polytechnique.
 
-![UM6P Logo](public\favicon.ico)
+![UM6P Logo](public/favicon.ico)
 
 ## Overview
 
