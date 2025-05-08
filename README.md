@@ -160,10 +160,8 @@ This project is proprietary and belongs to UM6P. All rights reserved.
 
 ## Author
 
-SANJI - Developed during an internship at UM6P's IT Department.
+Hamza Ait bouhou - Developed during an internship at UM6P's IT Department.
 
 ## Acknowledgements
 
 - The IT Department at UM6P for their support and guidance
-- Laravel team for the excellent framework
-- Bootstrap team for the frontend components
